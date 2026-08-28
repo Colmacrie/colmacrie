@@ -22,6 +22,18 @@
       --left-col: 550px;
     }
 
+    /* --- SN 2023qov interactive visualizations --- */
+    .viz-section { margin: 1.25rem 0 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-soft); }
+    .viz-toggle { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+    .viz-toggle .arrow { transition: transform 0.2s ease; }
+    .viz-toggle.collapsed .arrow { transform: rotate(-90deg); }
+    .viz-body { max-height: 900px; overflow: hidden; transition: max-height 0.25s ease; }
+    .viz-body.collapsed { max-height: 0; }
+    .viz-body iframe { width: 100%; height: 800px; border: 0; display: block; background: #000; }
+    .epoch-switch { display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1rem; background: var(--panel); border-bottom: 1px solid var(--border); }
+    .epoch-switch span { color: var(--muted); font-size: 0.85rem; margin-right: 0.25rem; }
+    .epoch-button { padding: 0.4rem 0.75rem; font-size: 0.85rem; }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -324,6 +336,31 @@
               in composition, located within 1 light year of the supernova, and possibly associated
               with the progenitor system rather than being environmental.
             </p>
+                       <h3 style="margin-top: 2rem;">Interactive Visualizations</h3>
+            <p><!-- Add your own framing text here. --></p>
+
+            <div class="viz-section">
+              <button class="tab-button viz-toggle" data-target="viz-linefits" aria-expanded="true">
+                <span>Interactive Nebular Line Fits</span><span class="arrow">&#9660;</span>
+              </button>
+              <div class="viz-body" id="viz-linefits">
+                <iframe src="sn2023qov/sn2023qov_linefits.html" loading="lazy"></iframe>
+              </div>
+            </div>
+
+            <div class="viz-section">
+              <button class="tab-button viz-toggle" data-target="viz-firefly" aria-expanded="true">
+                <span>3D Kinematic Map (Firefly)</span><span class="arrow">&#9660;</span>
+              </button>
+              <div class="viz-body" id="viz-firefly">
+                <div class="epoch-switch">
+                  <span>Epoch:</span>
+                  <button class="tab-button epoch-button active" data-epoch="1">Epoch 1 (+276 d)</button>
+                  <button class="tab-button epoch-button" data-epoch="2">Epoch 2 (+363 d)</button>
+                </div>
+                <iframe id="firefly-frame" src="sn2023qov/firefly_sn2023qov_ep1/index.html" loading="lazy" allowfullscreen></iframe>
+              </div>
+            </div>
           </div>
 
           <div id="outreach" class="tab-panel">
@@ -353,6 +390,26 @@
       document.getElementById(tabId).classList.add('active');
       evt.currentTarget.classList.add('active');
     }
+  </script>
+
+  <script>
+  document.querySelectorAll('.viz-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var body = document.getElementById(btn.dataset.target);
+      var collapsed = btn.classList.toggle('collapsed');
+      body.classList.toggle('collapsed');
+      btn.setAttribute('aria-expanded', String(!collapsed));
+    });
+  });
+
+  var fireflyFrame = document.getElementById('firefly-frame');
+  document.querySelectorAll('.epoch-button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.epoch-button').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      fireflyFrame.src = 'sn2023qov/firefly_sn2023qov_ep' + btn.dataset.epoch + '/index.html';
+    });
+  });
   </script>
 </body>
 </html>
