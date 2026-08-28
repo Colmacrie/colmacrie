@@ -7,23 +7,45 @@
   <title>Colin W. Macrie | Astrophysics</title>
 
   <style>
+    @font-face {
+      font-family: 'LMRoman';
+      src: url('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/fonts/KaTeX_Main-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'LMRoman';
+      src: url('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/fonts/KaTeX_Main-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'LMRoman';
+      src: url('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/fonts/KaTeX_Main-Italic.woff2') format('woff2');
+      font-weight: 400;
+      font-style: italic;
+    }
     :root {
-      --bg: #0a0d14;
-      --bg-soft: #111522;
-      --panel: rgba(14, 18, 30, 0.9);
-      --panel-2: rgba(10, 14, 24, 0.84);
+      --bg-soft: #171c2c;
+      --panel: rgba(26, 32, 48, 0.92);
+      --panel-2: rgba(22, 27, 41, 0.88);
       --text: #eef2ff;
-      --muted: #a6b0c8;
-      --accent: #8ec5ff;
-      --border: rgba(255, 255, 255, 0.1);
+      --muted: #b7c0d6;
+      --accent: #6a7d49;
+      --accent-rgb: 106, 125, 73;
+      --border: rgba(255, 255, 255, 0.14);
       --shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
       --maxw: 1600px;
       --gap: 1rem;
-      --left-col: 550px;
+      --radius: 3px;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-display: 'LMRoman', Georgia, "Times New Roman", serif;
     }
 
     /* --- SN 2023qov interactive visualizations --- */
-    .viz-section { margin: 1.25rem 0 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-soft); }
+    .viz-section { margin: 1.25rem 0 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg-soft); }
     .viz-toggle { width: 100%; display: flex; justify-content: space-between; align-items: center; }
     .viz-toggle .arrow { transition: transform 0.2s ease; }
     .viz-toggle.collapsed .arrow { transform: rotate(-90deg); }
@@ -33,6 +55,35 @@
     .epoch-switch { display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1rem; background: var(--panel); border-bottom: 1px solid var(--border); }
     .epoch-switch span { color: var(--muted); font-size: 0.85rem; margin-right: 0.25rem; }
     .epoch-button { padding: 0.4rem 0.75rem; font-size: 0.85rem; }
+
+    .callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: rgba(var(--accent-rgb), 0.08);
+      border: 1px solid rgba(var(--accent-rgb), 0.3);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0 0;
+    }
+
+    .callout svg {
+      flex: 0 0 auto;
+      width: 1.4rem;
+      height: 1.4rem;
+      color: var(--accent);
+      margin-top: 0.2rem;
+    }
+
+    .callout p {
+      color: var(--text);
+      margin: 0;
+    }
+
+    .callout strong {
+      color: var(--accent);
+    }
 
     * {
       box-sizing: border-box;
@@ -45,11 +96,13 @@
     }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: var(--font-body);
       color: var(--text);
       line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       background:
-        linear-gradient(rgba(5, 8, 16, 0.7), rgba(5, 8, 16, 0.92)),
+        linear-gradient(rgba(10, 14, 24, 0.5), rgba(10, 14, 24, 0.75)),
         url('images/background.jpg') center top / cover fixed no-repeat;
     }
 
@@ -62,6 +115,13 @@
       text-decoration: underline;
     }
 
+    a:focus-visible,
+    .btn:focus-visible,
+    .tab-button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
     .page-wrap {
       width: min(var(--maxw), calc(100% - 2rem));
       margin: 0 auto;
@@ -69,72 +129,175 @@
     }
 
     .layout {
-      display: grid;
-      grid-template-columns: minmax(300px, var(--left-col)) minmax(0, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: var(--gap);
-      align-items: start;
-    }
-
-    .sidebar {
-      position: sticky;
-      top: 1rem;
     }
 
     .hero-card {
       width: 100%;
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px);
-      padding: 2.5rem 2rem;
-      text-align: center;
+      padding: 3.25rem 3.5rem;
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      text-align: left;
+    }
+
+    .hero-text {
+      min-width: 0;
     }
 
     .headshot {
       width: 300px;
       height: 300px;
       object-fit: cover;
-      border-radius: 5%;
+      border-radius: var(--radius);
       border: 4px solid rgba(255, 255, 255, 0.13);
-      margin-bottom: 1.25rem;
+      flex: 0 0 auto;
       background: var(--bg-soft);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
     .name {
-      font-size: clamp(2.2rem, 3vw, 3.2rem);
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 4vw, 4.2rem);
       line-height: 1.05;
-      margin-bottom: 0.55rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.85rem;
       font-weight: 700;
     }
 
     .role {
-      color: var(--muted);
-      font-size: 1.05rem;
-      margin-bottom: 1rem;
+      display: inline-block;
+      color: #ae6937;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-style: italic;
+      letter-spacing: 0.01em;
+      border-left: 4px solid #ae6937;
+      padding-left: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .intro {
-      margin: 0 auto 1.4rem;
+      margin: 0 0 1.75rem;
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 1.05rem;
+      max-width: 75ch;
+    }
+
+    .hero-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 220px;
+      margin: 0 0 1.5rem;
     }
 
     .button-row {
       display: flex;
-      justify-content: center;
-      gap: 0.75rem;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 1rem;
       flex-wrap: wrap;
-      margin-bottom: 1.4rem;
+    }
+
+    .contact-wrap {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .social-links {
+      display: inline-flex;
+      gap: 0.6rem;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      padding: 0;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      color: var(--text);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .social-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .social-btn svg {
+      width: 1.3rem;
+      height: 1.3rem;
+    }
+
+    .email-reveal {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      max-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      opacity: 0;
+      margin-left: 0;
+      transition: max-width 0.3s ease, opacity 0.25s ease, margin 0.3s ease;
+    }
+
+    .email-reveal.open {
+      max-width: 320px;
+      opacity: 1;
+      margin-left: 0.75rem;
+    }
+
+    .email-reveal .email-text {
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: 0;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      color: var(--text);
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
+    }
+
+    .copy-btn svg {
+      width: 1.05rem;
+      height: 1.05rem;
     }
 
     .btn {
       display: inline-block;
-      padding: 0.8rem 1.1rem;
-      border-radius: 8px;
+      padding: 0.95rem 1.4rem;
+      border-radius: var(--radius);
+      font-size: 1.05rem;
       font-weight: 700;
-      border: 1px solid var(--border);
+      border: 2px solid var(--border);
       transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
     }
 
@@ -147,12 +310,13 @@
     .btn-primary {
       background: var(--accent);
       color: #07101c;
-      border: none;
+      border: 2px solid var(--accent);
     }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.1);
       color: var(--text);
+      border-color: rgba(255, 255, 255, 0.35);
     }
 
     .content-column {
@@ -163,7 +327,7 @@
       width: 100%;
       background: var(--panel-2);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
       backdrop-filter: blur(6px);
       padding: 2rem 2rem;
@@ -171,7 +335,17 @@
 
     .section h2,
     .section h3 {
+      font-family: var(--font-display);
       margin-bottom: 0.75rem;
+    }
+
+    .section h2 {
+      font-size: 2rem;
+    }
+
+    .section h3 {
+      font-size: 1.5rem;
+      line-height: 1.3;
     }
 
     .section p {
@@ -182,9 +356,75 @@
 
     .section img {
       width: 100%;
-      border-radius: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       margin: 1rem 0 1.5rem;
       display: block;
+    }
+
+    .section img.figure-sm {
+      width: 100%;
+      max-width: 1250px;
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    .eyebrow {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: var(--font-body);
+      color: var(--accent);
+      background: rgba(var(--accent-rgb), 0.1);
+      border: 1px solid rgba(var(--accent-rgb), 0.3);
+      border-radius: var(--radius);
+      transition: background 0.2s ease;
+    }
+
+    a.status-badge:hover {
+      background: rgba(var(--accent-rgb), 0.2);
+      text-decoration: none;
+    }
+
+    .arxiv-badge {
+      display: inline-block;
+      margin-top: 0.75rem;
+      margin-left: 0.5rem;
+      padding: 0.3rem 0.65rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #e2665f;
+      background: rgba(179, 27, 27, 0.12);
+      border: 1px solid rgba(179, 27, 27, 0.35);
+      border-radius: var(--radius);
+      transition: background 0.2s ease;
+    }
+
+    .arxiv-badge:hover {
+      background: rgba(179, 27, 27, 0.22);
+      text-decoration: none;
+    }
+
+    .cv-embed {
+      width: 100%;
+      height: 1100px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 1.25rem;
     }
 
     /* Tabs */
@@ -198,10 +438,10 @@
     }
 
     .tab-button {
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.1);
       color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-radius: var(--radius);
       padding: 0.65rem 1rem;
       cursor: pointer;
       font-size: 0.95rem;
@@ -210,14 +450,14 @@
     }
 
     .tab-button:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.16);
       transform: translateY(-1px);
     }
 
     .tab-button.active {
       background: var(--accent);
       color: #07101c;
-      border-color: transparent;
+      border-color: var(--accent);
     }
 
     .tab-panel {
@@ -231,24 +471,24 @@
     footer {
       width: 100%;
       background: #111522;
+      border-top: 1px solid var(--border);
       margin: 0;
       padding: 1.5rem 0 2rem;
       text-align: center;
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
     }
 
     @media (max-width: 950px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        position: static;
-      }
-
       .hero-card {
-        padding: 2.25rem 1.5rem;
+        padding: 2.5rem 1.75rem;
+        gap: 2rem;
+      }
+
+      .headshot {
+        width: 240px;
+        height: 240px;
       }
     }
 
@@ -259,18 +499,22 @@
       }
 
       .hero-card {
+        flex-direction: column;
+        text-align: center;
         padding: 2rem 1.2rem;
-        border-radius: 8px;
+      }
+
+      .hero-text .button-row {
+        justify-content: center;
       }
 
       .section {
         padding: 1.5rem 1.2rem;
-        border-radius: 8px;
       }
 
       .headshot {
-        width: 300px;
-        height: 300px;
+        width: 200px;
+        height: 200px;
       }
     }
   </style>
@@ -280,12 +524,14 @@
   <div class="page-wrap">
     <div class="layout">
 
-      <aside class="sidebar">
-        <section class="hero-card">
-          <img src="images/headshot.png" alt="Headshot" class="headshot" />
+      <section class="hero-card">
+        <img src="images/headshot.png" alt="Headshot" class="headshot" />
 
+        <div class="hero-text">
           <h1 class="name">Colin W. Macrie</h1>
-          <p class="role">Astrophysics | NSF GRFP Fellow</p>
+          <p class="role">Astrophysics &middot; NSF GRFP Fellow</p>
+
+          <hr class="hero-divider" />
 
           <p class="intro">
             I study thermonuclear supernovae via observations and modelling at Purdue University, as part of
@@ -293,19 +539,44 @@
           </p>
 
           <div class="button-row">
-            <a class="btn btn-secondary" href="documents/Macrie-CV-Spring-2026.pdf" target="_blank">View CV</a>
-            <a class="btn btn-primary" href="https://arxiv.org/abs/2604.09777" target="_blank">Most Recent Publication</a>
-            <a class="btn btn-secondary" href="mailto:cmacrie@purdue.edu">Contact</a>
+            <div class="social-links">
+              <a class="social-btn" href="https://orcid.org/0000-0002-9209-2787" target="_blank" rel="noopener" aria-label="ORCID profile" title="ORCID">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="11" fill="#A6CE39"></circle>
+                  <text x="12" y="16.5" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">iD</text>
+                </svg>
+              </a>
+              <a class="social-btn" href="https://www.instagram.com/col.mc.re/" target="_blank" rel="noopener" aria-label="Instagram profile" title="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+            </div>
+            <div class="contact-wrap">
+              <button class="btn btn-secondary" id="contact-btn" type="button" aria-expanded="false">Contact</button>
+              <div class="email-reveal" id="email-reveal">
+                <span class="email-text">cmacrie@purdue.edu</span>
+                <button class="copy-btn" id="copy-email-btn" type="button" aria-label="Copy email address" title="Copy email address">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="11" height="11" rx="1.5"></rect>
+                    <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
-        </section>
-      </aside>
+        </div>
+      </section>
 
       <main class="content-column">
         <section class="section">
           <div class="tab-bar">
             <!-- <button class="tab-button active" onclick="openTab(event, 'current-research')">Current Research</button> -->
-            <button class="tab-button active" onclick="openTab(event, 'sn2023qov')">SN 2023qov</button>
+            <button class="tab-button active" onclick="openTab(event, 'sn2023qov')">Most Recent Publication (SN 2023qov)</button>
             <button class="tab-button" onclick="openTab(event, 'outreach')">Outreach</button>
+            <button class="tab-button" onclick="openTab(event, 'cv')">CV</button>
           </div>
 
           <!-- <div id="current-research" class="tab-panel active">
@@ -316,43 +587,67 @@
           </div> -->
 
           <div id="sn2023qov" class="tab-panel active">
-            <h3>JWST Nebular Spectroscopy of SN 2023qov: Circumstellar Dust Emission in a Normal Type Ia Supernova <em>(Submitted to ApJ)</em></h3>
+            <span class="eyebrow">Featured Publication</span>
+            <h3>JWST Nebular Spectroscopy of SN 2023qov: Circumstellar Dust Emission in a Normal Type Ia Supernova</h3>
+            <a class="status-badge" href="https://arxiv.org/abs/2604.09777" target="_blank" rel="noopener">Accepted to ApJ</a>
+            <a class="arxiv-badge" href="https://arxiv.org/abs/2604.09777" target="_blank" rel="noopener" aria-label="View on arXiv">arXiv</a>
 
-            <p>
+            <p style="margin-top: 1.25rem;">
               SN 2023qov is a normal Type Ia supernova with circumstellar dust emission visible in its
               NIRSpec and MIRI JWST nebular spectra. This is shown in the plot below, the excess begins
               redward of 3 microns.
             </p>
 
-            <img src="images/SN2023qov_JWST.png" alt="SN 2023qov JWST spectra" />
+            <img src="images/SN2023qov_JWST.png" alt="SN 2023qov JWST spectra" class="figure-sm"/>
 
             <p>
               In Macrie et al. (in review), we interpret this emission as light from the SN
               absorbed and re-emitted by circumstellar dust, consistent with an infrared echo.
+              The dust is likely related to the progenitor or explosion, primarily carbonaceous
+              in composition, located within 1 light year of the supernova.
             </p>
-
-            <p>
-              In order of decreasing confidence, the dust is likely pre-existing, primarily carbonaceous
-              in composition, located within 1 light year of the supernova, and possibly associated
-              with the progenitor system rather than being environmental.
-            </p>
-                       <h3 style="margin-top: 2rem;">Interactive Visualizations</h3>
+            <h3 style="margin-top: 2rem;">Interactive Visualizations</h3>
             <p><!-- Add your own framing text here. --></p>
 
+            <p>
+              See the different MIR features and their velocity features by hovering over them in the interactive plot below.
+            </p>
+
             <div class="viz-section">
-              <button class="tab-button viz-toggle" data-target="viz-linefits" aria-expanded="true">
+              <button class="tab-button viz-toggle collapsed" data-target="viz-linefits" aria-expanded="false">
                 <span>Interactive Nebular Line Fits</span><span class="arrow">&#9660;</span>
               </button>
-              <div class="viz-body" id="viz-linefits">
+              <div class="viz-body collapsed" id="viz-linefits">
                 <iframe src="sn2023qov/sn2023qov_linefits.html" loading="lazy"></iframe>
               </div>
             </div>
+            <p></p>
+            <p>
+              The line profiles above can be used to reconstruct the ejecta of the SNe. We can do so with <a href="https://firefly.rcs.northwestern.edu/" target="_blank" rel="noopener">Firefly</a>,
+              an open-source tool for the fast visualization of 3D data.
+              
+              Only the velocity along the line of sight can be measured, so in the following visualization the ejecta are only offcenter 
+              along that axis. Further, the intermediate mass elements are shown as a stratified shell without the toroidal
+              enhancement discussed in Macrie et al. 2026.
+            </p>
+
+            <div class="callout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <p>
+                We use <a href="https://firefly.rcs.northwestern.edu/" target="_blank" rel="noopener">Firefly</a> to reconstruct the ejecta in 3D below. <strong>Scroll</strong> to zoom in and out.
+                Use the <strong>Particles</strong> menu to identify and select individual ions, and use the <strong>General/Camera</strong> tab to reset your camera position if needed.
+              </p>
+            </div>
 
             <div class="viz-section">
-              <button class="tab-button viz-toggle" data-target="viz-firefly" aria-expanded="true">
+              <button class="tab-button viz-toggle collapsed" data-target="viz-firefly" aria-expanded="false">
                 <span>3D Kinematic Map (Firefly)</span><span class="arrow">&#9660;</span>
               </button>
-              <div class="viz-body" id="viz-firefly">
+              <div class="viz-body collapsed" id="viz-firefly">
                 <div class="epoch-switch">
                   <span>Epoch:</span>
                   <button class="tab-button epoch-button active" data-epoch="1">Epoch 1 (+276 d)</button>
@@ -361,13 +656,30 @@
                 <iframe id="firefly-frame" src="sn2023qov/firefly_sn2023qov_ep1/index.html" loading="lazy" allowfullscreen></iframe>
               </div>
             </div>
+
+            <p></p>
+            <p>
+              Further, we note that the Co-II species FWHM is likely underpredicted, as it should be outside of the Ni species, 
+              Fe FWHM is likely overpredicted, and S is not well constrained. We attriubute this to heavy blending in those regions,
+              whereas other species have features in other parts of the spectrum which can provide stronger constraint.
+            </p>
           </div>
+
+            
 
           <div id="outreach" class="tab-panel">
             <h2>Outreach</h2>
             <p>
               Under construction
             </p>
+          </div>
+
+          <div id="cv" class="tab-panel">
+            <h2>Curriculum Vitae</h2>
+            <p>
+              <a class="btn btn-secondary" href="documents/Macrie-CV-Spring-2026.pdf" target="_blank">Download CV (PDF)</a>
+            </p>
+            <iframe class="cv-embed" src="documents/Macrie-CV-Spring-2026.pdf" title="Colin W. Macrie CV"></iframe>
           </div>
         </section>
       </main>
@@ -408,6 +720,25 @@
       document.querySelectorAll('.epoch-button').forEach(function (b) { b.classList.remove('active'); });
       btn.classList.add('active');
       fireflyFrame.src = 'sn2023qov/firefly_sn2023qov_ep' + btn.dataset.epoch + '/index.html';
+    });
+  });
+  </script>
+
+  <script>
+  var contactBtn = document.getElementById('contact-btn');
+  var emailReveal = document.getElementById('email-reveal');
+  contactBtn.addEventListener('click', function () {
+    var open = emailReveal.classList.toggle('open');
+    contactBtn.setAttribute('aria-expanded', String(open));
+  });
+
+  var copyEmailBtn = document.getElementById('copy-email-btn');
+  copyEmailBtn.addEventListener('click', function () {
+    var email = document.querySelector('.email-text').textContent;
+    navigator.clipboard.writeText(email).then(function () {
+      var original = copyEmailBtn.title;
+      copyEmailBtn.title = 'Copied!';
+      setTimeout(function () { copyEmailBtn.title = original; }, 1500);
     });
   });
   </script>
